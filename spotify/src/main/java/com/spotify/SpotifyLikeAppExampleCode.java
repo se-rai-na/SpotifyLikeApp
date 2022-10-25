@@ -1,5 +1,5 @@
+package com.spotify;
 import static javax.sound.sampled.AudioSystem.*;
-
 import java.io.*;
 import java.util.*;
 import javax.sound.sampled.*;
