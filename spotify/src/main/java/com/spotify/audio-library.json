@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Teach Me How to Dougie",
+    "artist": "Cali Swag District",
+    "fileName": "dougie.wav"
+  },
+  {
+    "name": "Could've Been (Tik Tok Remix)",
+    "artist": "H.E.R.",
+    "fileName": "her.wav"
+  },
+  {
+    "name": "On Me",
+    "artist": "Lil Baby",
+    "fileName": "lil-baby.wav"
+  },
+  {
+    "name": "Mo Money Mo Problems",
+    "artist": "Notorios BIG",
+	  "fileName": "biggie.wav"
+  },
+  {
+    "name": "Industry Baby",
+    "artist": "Lil Nas X",
+    "fileName": "nas-x.wav"
+  }
+]

@@ -16,7 +16,7 @@ public class SpotifyLikeAppExampleCode {
   String status;
   Long position;
   static Clip audioClip;
-
+  
   // "main" makes this class a java app that can be executed
   public static void main(final String[] args) {
     // create a scanner for user input
@@ -25,7 +25,7 @@ public class SpotifyLikeAppExampleCode {
     String userInput = "";
     while (!userInput.equals("q")) {
       menu();
-
+    
       // get input
       userInput = input.nextLine();
 
@@ -49,7 +49,9 @@ public class SpotifyLikeAppExampleCode {
     System.out.println("[S]earch by title");
     System.out.println("[L]ibrary");
     System.out.println("[P]lay");
+    System.out.println("[R]ewind");
     System.out.println("[Q]uit");
+    
 
     System.out.println("");
     System.out.print("Enter q to Quit:");
@@ -73,6 +75,9 @@ public class SpotifyLikeAppExampleCode {
         System.out.println("-->Play<--");
         play();
         break;
+      /*case "stop":
+        System.out.println("-->Stop<--");
+        stop();*/
       case "q":
         System.out.println("-->Quit<--");
         break;
@@ -105,7 +110,7 @@ public class SpotifyLikeAppExampleCode {
 
     */
     String path =
-      "/Users/serainaburge/Documents/GitHub/SpotifyApp/spotify-example";
+      "/Users/serainaburge/Documents/GitHub/SpotifyApp/spotify-example/wav";
 
     // get a handle to the file
     final File fileHandle = new File(path);
@@ -123,6 +128,9 @@ public class SpotifyLikeAppExampleCode {
       audioClip.loop(Clip.LOOP_CONTINUOUSLY);
     } catch (Exception e) {
       e.printStackTrace();
-    }
+    } 
   }
+  /*public static void stop(){
+    audioClip
+}*/
 }
