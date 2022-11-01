@@ -75,9 +75,6 @@ public class SpotifyLikeAppExampleCode {
         System.out.println("-->Play<--");
         play();
         break;
-      /*case "stop":
-        System.out.println("-->Stop<--");
-        stop();*/
       case "q":
         System.out.println("-->Quit<--");
         break;
@@ -110,7 +107,7 @@ public class SpotifyLikeAppExampleCode {
 
     */
     String path =
-      "/Users/serainaburge/Documents/GitHub/SpotifyApp/spotify-example/wav";
+      "/Users/serainaburge/Documents/GitHub/SpotifyApp/spotify-example/wav/Ava-Luna-Cement-Lunch.wav";
 
     // get a handle to the file
     final File fileHandle = new File(path);
@@ -130,7 +127,4 @@ public class SpotifyLikeAppExampleCode {
       e.printStackTrace();
     } 
   }
-  /*public static void stop(){
-    audioClip
-}*/
 }

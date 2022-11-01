@@ -1,9 +1,12 @@
 package com.spotify;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import javax.sound.sampled.*;
 import javax.sound.sampled.AudioSystem;
+import javax.swing.plaf.multi.MultiScrollBarUI;
+
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
@@ -13,14 +16,15 @@ public class App {
   // prviate variables for the app
   private static Clip audioClip;
   private static String basePath =
-  "/Users/serainaburge/Documents/GitHub/SpotifyApp/spotify/wav";
+  "/Users/serainaburge/Documents/GitHub/SpotifyApp/SpotifyLikeApp";
+  private static Scanner input = new Scanner(System.in);
+  //stores song name and reference to array position with filepath, artist, year and genre
+  private static HashMap <String, String> musicLibrary = new HashMap<String, String>();
+
   // "main" makes this class a java app that can be executed
   public static void main(final String[] args) {
     // test reading audio library from json file
     JSONArray library = readAudioLibrary();
-
-    // create a scanner for user input
-    Scanner input = new Scanner(System.in);
 
     String userInput = "";
     while (!userInput.equals("q")) {
@@ -40,17 +44,16 @@ public class App {
     input.close();
   }
 
+
   // print the menu
   public static void menu(JSONArray library) {
     System.out.println("---- SpotifyLikeApp ----");
+    
+    System.out.println("[H]ome");
 
-    for (Integer i = 0; i < library.size(); i++) {
-      JSONObject obj = (JSONObject) library.get(i);
-      String name = (String) obj.get("name");
-      System.out.printf("[%d] %s\n", i + 1, name);
-    }
+    System.out.println("[S]earch by title");
 
-    System.out.println("[P]ause");
+    System.out.println("[L]ibrary");
 
     System.out.println("[Q]uit");
 
@@ -62,15 +65,35 @@ public class App {
    * handles the user input for the app
    */
   public static void handleMenu(String userInput, JSONArray library) {
-    // check if the input is a number, if not if it is q, then quit
-    try {
-      Integer number = Integer.parseInt(userInput);
+    switch (userInput) {
+      case "h":
+        System.out.println("-->Home<--");
+        break;
+      case "s":
+        System.out.println("-->Search by title<--");
+        searchByTitle(library);
+        break;
+      case "l":
+        System.out.println("-->Library<--");
+        libraryDisplay(library);
+        break;
+      case "q":
+        System.out.println("-->Quit<--");
+        break;
+      default:
+        break;
+    } 
+
+    //check if the input is a number, if not if it is q, then quit
+    /*try {
+      
+      Integer number = Integer.parseInt(songChoice);
 
       // subtract 1 from user input to match the indices
       number -= 1;
 
       // if number is 1-5 play the song
-      if (number < library.size()) {
+      /* if (number < library.size()) {
         play(library, number);
       }
     } catch (Exception e) {
@@ -78,16 +101,55 @@ public class App {
         System.out.println("Thank you for using the app.");
       } else {
         System.out.printf("Error: %s is not a command\n", userInput);
-      }
+      } */ 
+     
+  }
+
+  //prints the entire music library the user can choose from
+  public static void libraryDisplay(JSONArray musicLibrary){
+    for (Integer i = 0; i < musicLibrary.size(); i++) {
+      JSONObject obj = (JSONObject) musicLibrary.get(i);
+      String name = (String) obj.get("name");
+      System.out.printf("[%d] %s\n", i + 1, name);
     }
+
+    // get input
+    String userInput = input.nextLine();
+    
+    //get the number from the input
+    Integer userChoice = Integer.parseInt(userInput);
+
+    //subtract one to match the indices
+    userChoice -= 1;
+
+    //get the name of the song to pass to the play function as argument
+    JSONObject obj = (JSONObject) musicLibrary.get(userChoice);
+    String name = (String) obj.get("name");
+
+    //pass name to play function to play the song
+    play(name);
+
+  }
+
+  //looks for a specific song the user wants to play
+  public static void searchByTitle (JSONArray library){
+    System.out.println("Which song are you looking for?");
+    
+    // get input
+    String userChoice = input.nextLine();
+
+    //see if the song exists
+    musicLibrary.get(userChoice);
+
+    //send song choice to play function
+    play(userChoice);
   }
 
   // plays an audio file
-  public static void play(JSONArray library, Integer songIndex) {
+  public static void play(String songName) {
     // get the filePath and open the audio file
-    JSONObject obj = (JSONObject) library.get(songIndex);
-    final String fileName = (String) obj.get("fileName");
-    final String filePath = basePath + "/" + fileName;
+    final String fileName = songName.toLowerCase();
+    final String filePath = basePath + "/" + fileName + ".wav";
     final File file = new File(filePath);
 
     // stop the current song from playing, before playing the next one
@@ -142,11 +204,11 @@ public class App {
   // read the audio library of music
   public static JSONArray readAudioLibrary() {
     String pathToFile =
-      "/Users/serainaburge/Documents/GitHub/SpotifyApp/spotify/src/main/java/com/spotify/audio-library.json";
+      "/Users/serainaburge/Documents/GitHub/SpotifyApp/spotify/src/main/java/com/spotify/spotifyLibrary.json";
     JSONArray jsonData = readJSONArrayFile(pathToFile);
 
     // loop over list
-    String name, artist, fileName;
+    String name, artist, year, genre;
     JSONObject obj;
 
     System.out.println("Reading the file " + pathToFile);
@@ -156,11 +218,15 @@ public class App {
       obj = (JSONObject) jsonData.get(i);
       name = (String) obj.get("name");
       artist = (String) obj.get("artist");
-      fileName = (String) obj.get("filePath");
+      year = (String) obj.get("year");
+      genre = (String) obj.get("genre");
+
+      musicLibrary.put(name, "%s, %s, %s" + artist + year + genre);
 
       System.out.println("\tname = " + name);
       System.out.println("\tartist = " + artist);
-      System.out.println("\tfilePath = " + fileName);
+      System.out.println("\tyear = " + year);
+      System.out.println("\tgenre = " + genre);
     }
 
     return jsonData;

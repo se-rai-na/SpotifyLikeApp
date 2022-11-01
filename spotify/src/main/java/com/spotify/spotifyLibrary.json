@@ -1,0 +1,62 @@
+[
+    {
+        "name": "Mermaid",
+        "artist": "Skott",
+        "year": "2017",
+        "genre": "Pop"
+    },
+    {
+        "name": "Runaway",
+        "artist": "Aurora",
+        "year": "2016",
+        "genre": "Pop"
+    },
+    {
+        "name": "Shinunoga E-Wa", 
+        "artist": "Fujii Kaze",
+        "year": "2020",
+        "genre": "Pop"
+    },
+    {
+        "name": "S.T.A.Y.",
+        "artist": "Hans Zimmer",
+        "year": "2014",
+        "genre": "OST"
+    },
+    {
+        "name": "Plastic Love",
+        "artist": "Mariya Takeuchi",
+        "year": "1979",
+        "genre": "Japanese City Pop"
+    },
+    {
+        "name": "Little Dark Age",
+        "artist": "MGMT",
+        "year": "2017",
+        "genre": "Alternative Rock"
+    },
+    {
+        "name": "Du hast",
+        "artist": "Rammstein",
+        "year": "1997",
+        "genre": "Metall"
+    },
+    {
+        "name": "On n'a qu'une terre",
+        "artist": "Stress",
+        "year": "2007",
+        "genre": "Hip Hop"
+    },
+    {
+        "name": "Papaoutai",
+        "artist": "Stromae",
+        "year": "2013",
+        "genre": "Pop"
+    },
+    {
+        "name": "Not Fair",
+        "artist": "Lily Allens",
+        "year": "2009",
+        "genre": "Pop"
+    }
+]
