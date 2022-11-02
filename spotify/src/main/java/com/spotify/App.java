@@ -126,6 +126,7 @@ public class App {
     JSONObject obj = (JSONObject) musicLibrary.get(userChoice);
     String name = (String) obj.get("name");
 
+    System.out.println("This is the song: " + name);
     //pass name to play function to play the song
     play(name);
 
@@ -223,10 +224,10 @@ public class App {
 
       musicLibrary.put(name, "%s, %s, %s" + artist + year + genre);
 
-      System.out.println("\tname = " + name);
+      /*System.out.println("\tname = " + name);
       System.out.println("\tartist = " + artist);
       System.out.println("\tyear = " + year);
-      System.out.println("\tgenre = " + genre);
+      System.out.println("\tgenre = " + genre);*/
     }
 
     return jsonData;
