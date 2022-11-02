@@ -21,7 +21,7 @@ public class App {
   //stores song name and reference to array position with filepath, artist, year and genre
   private static HashMap <String, ArrayList<String>> musicLibrary = new HashMap<String, ArrayList<String>>();
   //stores the play history
-  //private static ArrayList <String> playHistory = new ArrayList<String>();
+  private static ArrayList <String> playHistory = new ArrayList<String>();
 
   // "main" makes this class a java app that can be executed
   public static void main(final String[] args) {
@@ -161,6 +161,9 @@ public class App {
 
   // plays an audio file
   public static void play(String songName) {
+    // add the song to the song history
+    playHistory.add(songName);
+
     // get the filePath and open the audio file
     String fileName = songName.toLowerCase();
     String filePath = basePath + "/" + fileName + ".wav";
