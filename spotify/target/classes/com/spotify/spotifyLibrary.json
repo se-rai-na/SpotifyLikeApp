@@ -39,14 +39,14 @@
         "artist": "MGMT",
         "year": "2017",
         "genre": "Alternative Rock",
-        "filepath": "little-dark-age"
+        "filepath": "little-dark-age.wav"
     },
     {
         "name": "Du hast",
         "artist": "Rammstein",
         "year": "1997",
         "genre": "Metall",
-        "filepath": "du-hast"
+        "filepath": "du-hast.wav"
     },
     {
         "name": "On n'a qu'une terre",
