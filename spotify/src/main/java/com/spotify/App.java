@@ -128,13 +128,15 @@ public class App {
       songCredits = musicLibrary.get(key);
 
       //Display number, song title and information; i+1 so the output starts from 1
-      System.out.println("["+(i+1)+"] " + key);
+      System.out.print("["+(i+1)+"] " + key);
+
       //print artist, year, genre
       for(Integer y = 0; y < elements; y++){
-        System.out.print(songCredits[y] + ", ");
+        System.out.print(", " + songCredits[y]);
       }
 
-      System.out.println("");
+      System.out.println(" ");
+      System.out.println(" ");
       //Keys are saved in the array to be retrieved after receiving user input
       keyMusicLibrary[i] = key;
       i++;
@@ -258,6 +260,7 @@ public class App {
       //display a number starting with 1 with the song tiile and artist
       System.out.println((i+1) + " " + playHistory.get(i));
     }
+    System.out.println("");
   }
 
   /* 
@@ -302,10 +305,6 @@ public class App {
     // loop over list
     String name, artist, year, genre, filepath;
     JSONObject obj;
-
-  
-
-    System.out.println("Reading the file " + pathToFile);
 
     for (Integer i = 0; i < jsonData.size(); i++) {
       // parse the object and pull out the name and birthday
