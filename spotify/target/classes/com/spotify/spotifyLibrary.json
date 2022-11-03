@@ -60,9 +60,34 @@
         "genre": "Pop"
     },
     {
-    "name": "Industry Baby",
-    "artist": "Lil Nas X", 
-    "year": "2013",
-    "genre": "Pop"
+        "name": "Industry Baby",
+        "artist": "Lil Nas X", 
+        "year": "2021",
+        "genre": "Pop"
+    },
+    {
+        "name": "Teach Me How to Dougie",
+        "artist": "Cali Swag District",
+        "year": "2011",
+        "genre": "Hip Hop"
+    },
+    {
+        "name": "Could've Been",
+        "artist": "H.E.R.",
+        "year": "2019",
+        "genre": "Pop"
+    },
+    {
+        "name": "On Me",
+        "artist": "Lil Baby",
+        "year": "2020",
+        "genre": "Hip Hop"
+    },
+    {
+        "name": "Mo Money Mo Problems",
+        "artist": "Notorios BIG",
+        "year": "1997",
+        "genre": "Hip Hop"
     }
+
 ]
