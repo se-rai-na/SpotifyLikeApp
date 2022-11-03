@@ -3,91 +3,106 @@
         "name": "Mermaid",
         "artist": "Skott",
         "year": "2017",
-        "genre": "Pop"
+        "genre": "Pop",
+        "filepath": "mermaid.wav"
     },
     {
         "name": "Runaway",
         "artist": "Aurora",
         "year": "2016",
-        "genre": "Pop"
+        "genre": "Pop",
+        "filepath": "runaway.wav"
     },
     {
         "name": "Shinunoga E-Wa", 
         "artist": "Fujii Kaze",
         "year": "2020",
-        "genre": "Pop"
+        "genre": "Pop",
+        "filepath": "shinunoga-e-wa.wav"
     },
     {
         "name": "S.T.A.Y.",
         "artist": "Hans Zimmer",
         "year": "2014",
-        "genre": "OST"
+        "genre": "OST",
+        "filepath": "s.t.a.y..wav"
     },
     {
         "name": "Plastic Love",
         "artist": "Mariya Takeuchi",
         "year": "1979",
-        "genre": "Japanese City Pop"
+        "genre": "Japanese City Pop",
+        "filepath": "plastic-love.wav"
     },
     {
         "name": "Little Dark Age",
         "artist": "MGMT",
         "year": "2017",
-        "genre": "Alternative Rock"
+        "genre": "Alternative Rock",
+        "filepath": "little-dark-age"
     },
     {
         "name": "Du hast",
         "artist": "Rammstein",
         "year": "1997",
-        "genre": "Metall"
+        "genre": "Metall",
+        "filepath": "du-hast"
     },
     {
         "name": "On n'a qu'une terre",
         "artist": "Stress",
         "year": "2007",
-        "genre": "Hip Hop"
+        "genre": "Hip Hop",
+        "filepath": "on-n'a-qu'une-terre.wav"
     },
     {
         "name": "Papaoutai",
         "artist": "Stromae",
         "year": "2013",
-        "genre": "Pop"
+        "genre": "Pop",
+        "filepath": "papaoutai.wav"
     },
     {
         "name": "Not Fair",
         "artist": "Lily Allens",
         "year": "2009",
-        "genre": "Pop"
+        "genre": "Pop",
+        "filepath": "not-fair.wav"
     },
     {
         "name": "Industry Baby",
         "artist": "Lil Nas X", 
         "year": "2021",
-        "genre": "Pop"
+        "genre": "Pop",
+        "filepath": "industry-baby.wav"
     },
     {
         "name": "Teach Me How to Dougie",
         "artist": "Cali Swag District",
         "year": "2011",
-        "genre": "Hip Hop"
+        "genre": "Hip Hop",
+        "filepath": "teach-me-how-to-dougie.wav"
     },
     {
         "name": "Could've Been",
         "artist": "H.E.R.",
         "year": "2019",
-        "genre": "Pop"
+        "genre": "Pop",
+        "filepath": "could've-been.wav"
     },
     {
         "name": "On Me",
         "artist": "Lil Baby",
         "year": "2020",
-        "genre": "Hip Hop"
+        "genre": "Hip Hop",
+        "filepath": "on-me.wav"
     },
     {
         "name": "Mo Money Mo Problems",
         "artist": "Notorios BIG",
         "year": "1997",
-        "genre": "Hip Hop"
+        "genre": "Hip Hop",
+        "filepath": "mo-money-mo-problems.wav"
     }
 
 ]
