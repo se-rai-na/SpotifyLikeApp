@@ -24,9 +24,9 @@ public class App {
   private static String basePath =
   "/Users/serainaburge/Documents/GitHub/SpotifyApp/wav";
   private static Scanner input = new Scanner(System.in);
-  //the amount of elements stored insude the array in the hashmap
-  private static Integer elements = 3;
-  //stores song name and reference to array position with filepath, artist, year and genre
+  //the amount of elements stored inside the array in the hashmap
+  private static Integer elements = 4;
+  //stores song name and array with filepath, artist, year and genre
   private static HashMap <String, String[]> musicLibrary = new HashMap<String, String[]>();
   //stores the play history
   private static ArrayList <String> playHistory = new ArrayList<String>();
@@ -174,12 +174,15 @@ public class App {
     System.out.println("Which song are you looking for?");
     
     Boolean correctInput = false;
+    //while loop repeats until valid song title is entered
     while(!correctInput){
     // get input
     String userChoice = input.nextLine();
+
     //test if the song exists in the library
       if(musicLibrary.containsKey(userChoice))
       {
+        //to exit the while loop
         correctInput = true;
         //send song choice to play function
         play(userChoice);
@@ -197,17 +200,16 @@ public class App {
   */ 
   public static void play(String songName) {
     //add song information in array
-    String[] artistName = musicLibrary.get(songName);
+    String[] songInfo = musicLibrary.get(songName);
     //add song name and: artistName[0] -> add only the artist to array
-    playHistory.add(songName +", "+ artistName[0]);
+    playHistory.add(songName +", "+ songInfo[0]);
     
 
     //Display currently played song title to user
     System.out.println("You are listening to: " + songName);
 
-    // get the filePath and open the audio file
-    String fileName = songName.toLowerCase();
-    String filePath = basePath + "/" + fileName + ".wav";
+    // get the filePath and open the audio file (filepath is located at indice 3 in the array)
+    String filePath = basePath + "/" + songInfo[3];
     File file = new File(filePath);
 
     // stop the current song from playing, before playing the next one
@@ -238,7 +240,8 @@ public class App {
   public static void home(){
     System.out.println("Your recently played songs:");
     for(int i = 0; i < playHistory.size(); i++){
-      System.out.println("\t" + playHistory.get(i));
+      //display a number starting with 1 with the song tiile and artist
+      System.out.println((i+1) + playHistory.get(i));
     }
   }
 
@@ -282,7 +285,7 @@ public class App {
     JSONArray jsonData = readJSONArrayFile(pathToFile);
 
     // loop over list
-    String name, artist, year, genre;
+    String name, artist, year, genre, filepath;
     JSONObject obj;
 
   
@@ -296,12 +299,14 @@ public class App {
       artist = (String) obj.get("artist");
       year = (String) obj.get("year");
       genre = (String) obj.get("genre");
+      filepath = (String) obj.get("filepath");
 
       // Array that stores artist, year and genre
       String[] songInfo = new String [elements];
       songInfo[0] = artist;
       songInfo[1] = year;
       songInfo[2] = genre;
+      songInfo[3] = filepath;
 
       musicLibrary.put(name, songInfo);
     }
