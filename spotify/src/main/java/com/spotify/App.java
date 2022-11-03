@@ -68,6 +68,8 @@ public class App {
 
     System.out.println("[L]ibrary");
 
+    System.out.println("S[t]op playing");
+
     System.out.println("[Q]uit");
 
     System.out.println("");
@@ -94,6 +96,9 @@ public class App {
         System.out.println("-->Library<--");
         libraryDisplay();
         break;
+      case "t":
+        System.out.println("-->Stop<--");
+        stop();
       case "q":
         System.out.println("-->Quit<--");
         break;
@@ -232,6 +237,16 @@ public class App {
     }
   }
 
+  /*
+   * Func: Stop currently played song
+   * 
+   */
+  public static void stop(){
+    if(audioClip != null){
+      audioClip.stop();
+    }
+  }
+
   /* 
   *Func: Displays the recently played song
   *Desc: Displays the recently played song by using the global variable playHistory, 
@@ -241,7 +256,7 @@ public class App {
     System.out.println("Your recently played songs:");
     for(int i = 0; i < playHistory.size(); i++){
       //display a number starting with 1 with the song tiile and artist
-      System.out.println((i+1) + playHistory.get(i));
+      System.out.println((i+1) + " " + playHistory.get(i));
     }
   }
 
