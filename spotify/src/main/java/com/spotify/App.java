@@ -1,3 +1,9 @@
+/*
+ * Seraina Burge
+ * Spotify Like App
+ * October 2022
+ * v1.0
+ */
 package com.spotify;
 
 import java.io.*;
@@ -50,8 +56,10 @@ public class App {
   }
 
 
-  // print the menu
-  public static void menu() {
+  /*
+  * Func: print the menu
+  */
+   public static void menu() {
     System.out.println("---- SpotifyLikeApp ----");
     
     System.out.println("[H]ome");
@@ -69,7 +77,8 @@ public class App {
   }
 
   /*
-   * handles the user input for the app
+   * Func: handles the user input for the app
+   * Desc: User input will be used to start the corresponding functions
    */
   public static void handleMenu(String userInput) {
     switch (userInput) {
@@ -91,36 +100,15 @@ public class App {
       default:
         break;
     } 
-
-    //check if the input is a number, if not if it is q, then quit
-    /*try {
-      
-      Integer number = Integer.parseInt(songChoice);
-
-      // subtract 1 from user input to match the indices
-      number -= 1;
-
-      // if number is 1-5 play the song
-      /* if (number < library.size()) {
-        play(library, number);
-      }
-    } catch (Exception e) {
-      if (userInput.equals("q")) {
-        System.out.println("Thank you for using the app.");
-      } else {
-        System.out.printf("Error: %s is not a command\n", userInput);
-      } */ 
-     
   }
 
-  //prints the entire music library the user can choose from
+  /*
+  *
+  * Func: prints the entire music library the user can choose from
+  * Desc: Read musicLibrary keys into an array. User inputs number that corresponds to 
+  * the song name inside the keyMusicLibrary() array
+  */
   public static void libraryDisplay(){
-    /*for (Integer i = 0; i < Library.size(); i++) {
-      JSONObject obj = (JSONObject) Library.get(i);
-      String name = (String) obj.get("name");
-      System.out.printf("[%d] %s\n", i + 1, name);
-    }*/
-    //to only create and add to the key array once
     //Boolean firstShow;
     //to store keys in the hashmaps order and retrieve them
     String[] keyMusicLibrary = new String [musicLibrary.size()];
@@ -145,27 +133,43 @@ public class App {
       //Keys are saved in the array to be retrieved after receiving user input
       keyMusicLibrary[i] = key;
       i++;
-    }
+    } //end for loop
 
     // get input
     String userInput = input.nextLine();
-    
+
+    /*
+     Check if the input is valid
+     */
+    try{
     //get the number from the input
     Integer userChoice = Integer.parseInt(userInput);
 
     //subtract one to match the indices
-    userChoice -= 1;
-
+    userChoice -= 1; 
     //get the name of the song to pass to the play function as argument
-    String songTitle = keyMusicLibrary[userChoice];
+    String songTitle = keyMusicLibrary[userChoice]; 
 
-    System.out.println("This is the song: " + keyMusicLibrary[userChoice]);
-    //pass name to play function to play the song
-    play(songTitle);
-
+      //test for valid input, number has to be smaller than the amount of songs in the library
+      if(userChoice < musicLibrary.size()){
+        //pass name to play function to play the song
+        play(songTitle);
+      }
+    } catch (Exception e) {
+      if (userInput.equals("q")) {
+        System.out.println("Thank you for using the app.");
+      } else {
+        System.out.printf("Error: %s is not a command\n", userInput);
+      }
+    }
   }
 
-  //looks for a specific song the user wants to play
+  /*
+  *
+  *Func: looks for a specific song the user wants to play
+  *Desc: uses the musicLibrary global variable to look up wether
+  *  a specific song exists. The name then sent to the function audio()
+  */
   public static void searchByTitle (){
     System.out.println("Which song are you looking for?");
     
@@ -186,7 +190,11 @@ public class App {
     }
   }
 
-  // plays an audio file
+  /*
+  *
+  * plays an audio file
+  *
+  */ 
   public static void play(String songName) {
     //add song information in array
     String[] artistName = musicLibrary.get(songName);
@@ -222,10 +230,11 @@ public class App {
     }
   }
 
-  //Func: Displays the recently played song
-  //Desc: Displays the recently played song by using the global variable playHistory, 
-  //which stores all the song titles that are passed to the play function
-  //
+  /* 
+  *Func: Displays the recently played song
+  *Desc: Displays the recently played song by using the global variable playHistory, 
+  *which stores all the song titles that are passed to the play function
+  */
   public static void home(){
     System.out.println("Your recently played songs:");
     for(int i = 0; i < playHistory.size(); i++){
@@ -233,11 +242,11 @@ public class App {
     }
   }
 
-  //
-  // Func: readJSONFile
-  // Desc: Reads a json file storing an array and returns an object
-  // that can be iterated over
-  //
+  /* 
+  * Func: readJSONFile
+  * Desc: Reads a json file storing an array and returns an object
+  * that can be iterated over
+  */
   public static JSONArray readJSONArrayFile(String fileName) {
     // JSON parser object to parse read file
     JSONParser jsonParser = new JSONParser();
@@ -262,7 +271,11 @@ public class App {
     return dataArray;
   }
 
-  // read the audio library of music
+  /*
+  *
+  * read the audio library of music
+  *
+  */ 
   public static void readAudioLibrary() {
     String pathToFile =
       "/Users/serainaburge/Documents/GitHub/SpotifyApp/spotify/src/main/java/com/spotify/spotifyLibrary.json";
@@ -291,10 +304,6 @@ public class App {
       songInfo[2] = genre;
 
       musicLibrary.put(name, songInfo);
-    }
-    for(String key : musicLibrary.keySet()){
-      System.out.println(key);
-      System.out.println(musicLibrary.get(key));
     }
   }  
 }
