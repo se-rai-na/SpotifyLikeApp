@@ -24,10 +24,8 @@ public class App {
   private static String basePath =
   "/Users/serainaburge/Documents/GitHub/SpotifyApp/wav";
   private static Scanner input = new Scanner(System.in);
-  //the amount of elements stored inside the array in the hashmap
-  private static Integer elements = 4;
-  //stores song name and array with filepath, artist, year and genre
-  private static HashMap <String, String[]> musicLibrary = new HashMap<String, String[]>();
+  //stores song name as key and hashmap with filepath, artist, year and genre as value
+  private static HashMap <String, HashMap<String, String>> musicLibrary = new HashMap<String, HashMap<String, String>>();
   //stores the play history
   private static ArrayList <String> playHistory = new ArrayList<String>();
   
@@ -122,8 +120,8 @@ public class App {
     Integer i = 0;
 
     for(String key : musicLibrary.keySet()){
-      //create array to read the song title information
-      String[] songCredits = new String [elements];
+      //create hashmap to read the song title information
+      HashMap <String, String> songCredits = new HashMap <String, String>();
       //read current keys object into the variable songCredits
       songCredits = musicLibrary.get(key);
 
@@ -131,8 +129,8 @@ public class App {
       System.out.print("["+(i+1)+"] " + key);
 
       //print artist, year, genre
-      for(Integer y = 0; y < elements; y++){
-        System.out.print(", " + songCredits[y]);
+      for(String value : songCredits.values()){
+        System.out.print(", " + value);
       }
 
       System.out.println(" ");
@@ -206,17 +204,19 @@ public class App {
   *
   */ 
   public static void play(String songName) {
-    //add song information in array
-    String[] songInfo = musicLibrary.get(songName);
-    //add song name and: artistName[0] -> add only the artist to array
-    playHistory.add(songName +", "+ songInfo[0]);
+    //initialize hashmap used to read song information
+    HashMap <String, String> songInfo = new HashMap <String, String>();
+    //add song information in hashmap
+    songInfo = musicLibrary.get(songName);
+    //add song name and artistName 
+    playHistory.add(songName +", "+ songInfo.get("artist"));
     
 
     //Display currently played song title to user
     System.out.println("You are listening to: " + songName);
 
     // get the filePath and open the audio file (filepath is located at indice 3 in the array)
-    String filePath = basePath + "/" + songInfo[3];
+    String filePath = basePath + "/" + songInfo.get("filepath");
     File file = new File(filePath);
 
     // stop the current song from playing, before playing the next one
@@ -315,12 +315,12 @@ public class App {
       genre = (String) obj.get("genre");
       filepath = (String) obj.get("filepath");
 
-      // Array that stores artist, year and genre
-      String[] songInfo = new String [elements];
-      songInfo[0] = artist;
-      songInfo[1] = year;
-      songInfo[2] = genre;
-      songInfo[3] = filepath;
+      // Hashmap that stores artist, year and genre
+      HashMap <String, String> songInfo = new HashMap <String, String>();
+      songInfo.put("artist", artist);
+      songInfo.put("year", year);
+      songInfo.put("genre", genre);
+      songInfo.put("filepath", filepath);
 
       musicLibrary.put(name, songInfo);
     }
