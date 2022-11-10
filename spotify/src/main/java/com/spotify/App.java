@@ -25,7 +25,7 @@ public class App {
   "/Users/serainaburge/Documents/GitHub/SpotifyApp/wav";
   private static Scanner input = new Scanner(System.in);
   //stores song name as key and hashmap with filepath, artist, year and genre as value
-  private static HashMap <String, HashMap<String, String>> musicLibrary = new HashMap<String, HashMap<String, String>>();
+  private static HashMap <String, HashMap<String, Object>> musicLibrary = new HashMap<String, HashMap<String, Object>>();
   //stores the play history
   private static ArrayList <String> playHistory = new ArrayList<String>();
   
@@ -68,6 +68,10 @@ public class App {
 
     System.out.println("S[t]op playing");
 
+    System.out.println("(R)ewind 10 seconds");
+
+    System.out.println("(F)orward by 10 seconds")
+
     System.out.println("[Q]uit");
 
     System.out.println("");
@@ -97,6 +101,12 @@ public class App {
       case "t":
         System.out.println("-->Stop<--");
         stop();
+      case "r":
+        System.out.println("-->Rewind<--");
+        rewind();
+      case "f":
+        System.out.println("-->Forward<--");
+        forward();
       case "q":
         System.out.println("-->Quit<--");
         break;
@@ -109,10 +119,9 @@ public class App {
   *
   * Func: prints the entire music library the user can choose from
   * Desc: Read musicLibrary keys into an array. User inputs number that corresponds to 
-  * the song name inside the keyMusicLibrary() array
+  * the song name inside the keyMusicLibrary() array.
   */
   public static void libraryDisplay(){
-    //Boolean firstShow;
     //to store keys in the hashmaps order and retrieve them
     String[] keyMusicLibrary = new String [musicLibrary.size()];
 
@@ -121,15 +130,14 @@ public class App {
 
     for(String key : musicLibrary.keySet()){
       //create hashmap to read the song title information
-      HashMap <String, String> songCredits = new HashMap <String, String>();
+      HashMap <String, Object> songCredits = new HashMap <String, Object>();
       //read current keys object into the variable songCredits
       songCredits = musicLibrary.get(key);
-
       //Display number, song title and information; i+1 so the output starts from 1
       System.out.print("["+(i+1)+"] " + key);
 
       //print artist, year, genre
-      for(String value : songCredits.values()){
+      for(Object value : songCredits.values()){
         System.out.print(", " + value);
       }
 
@@ -205,7 +213,7 @@ public class App {
   */ 
   public static void play(String songName) {
     //initialize hashmap used to read song information
-    HashMap <String, String> songInfo = new HashMap <String, String>();
+    HashMap <String, Object> songInfo = new HashMap <String, Object>();
     //add song information in hashmap
     songInfo = musicLibrary.get(songName);
     //add song name and artistName 
@@ -248,6 +256,31 @@ public class App {
       audioClip.stop();
     }
   }
+
+  /*
+   * Func: Rewind currently played song by 10 seconds
+   */
+  public static void rewind(){
+    if(audioClip != null){
+      audioClip.stop();
+      long position = audioClip.getMicrosecondPosition();
+      audioClip.setMicrosecondPosition(position-10000000);
+      audioClip.start();
+      }
+    }
+  
+  /*
+   * Func: Forward currently played song by 10 seconds
+   */
+  public static void forward(){
+    if(audioClip != null){
+      audioClip.stop();
+      long position = audioClip.getMicrosecondPosition();
+      audioClip.setMicrosecondPosition(position+10000000);
+      audioClip.start();
+      }
+  }
+  
 
   /* 
   *Func: Displays the recently played song
@@ -316,11 +349,12 @@ public class App {
       filepath = (String) obj.get("filepath");
 
       // Hashmap that stores artist, year and genre
-      HashMap <String, String> songInfo = new HashMap <String, String>();
+      HashMap <String, Object> songInfo = new HashMap <String, Object>();
       songInfo.put("artist", artist);
       songInfo.put("year", year);
       songInfo.put("genre", genre);
       songInfo.put("filepath", filepath);
+      songInfo.put("favorite", false);
 
       musicLibrary.put(name, songInfo);
     }
