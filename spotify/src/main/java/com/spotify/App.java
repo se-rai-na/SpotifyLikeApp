@@ -35,7 +35,7 @@ public class App {
   private static HashMap <String, Boolean> favoriteSong = new HashMap<String, Boolean>();
   //array that saves song names for favorite values that have been changed 
   private static HashMap <String, Boolean> favoriteChanges = new HashMap<String, Boolean>();
-  //
+  //json arrat that stores json data and is used at the end to update the file
   private static JSONArray jsonData;
 
   // "main" makes this class a java app that can be executed
@@ -223,8 +223,8 @@ public class App {
     playHistory.add(songName +", "+ songInfo.get("artist"));
     
 
-    //Display currently played song title to user
-    System.out.println("You are listening to: " + songName);
+    //Display currently played song title, artist, year to user
+    System.out.printf("You are listening to: %s by %s (%s) \n", songName, songInfo.get("artist"), songInfo.get("year"));
 
     // get the filePath and open the audio file (filepath is located at indice 3 in the array)
     String filePath = basePath + "/" + songInfo.get("filepath");
@@ -269,6 +269,10 @@ public class App {
 
     System.out.println("S[t]op playing");
 
+    System.out.println("[P]ause");
+
+    System.out.println("P[l]ay");
+
     System.out.println("[R]ewind 10 seconds");
 
     System.out.println("[F]orward 10 seconds");
@@ -285,6 +289,14 @@ public class App {
       case "t":
         System.out.println("-->Stop<--");
         stop();
+        break;
+      case "p":
+        System.out.println("-->Pause<--");
+        pause();
+        break;
+      case "l":
+        System.out.println("-->Play<--");
+        play();
         break;
       case "r":
         System.out.println("-->Rewind<--");
@@ -363,8 +375,23 @@ public class App {
         favoriteChanges.put(songName, true);
     }
   }
+  /*
+   * Func: Pause currently played song
+   */
+  public static void pause(){
+    if(audioClip != null){
+      audioClip.stop();
+    }
+  }
 
-
+  /*
+   * Func: continue playing currently paused song
+   */
+  public static void play(){
+    if(audioClip != null){
+      audioClip.start();
+    }
+  }
 
   /*
    * Func: Stop currently played song
