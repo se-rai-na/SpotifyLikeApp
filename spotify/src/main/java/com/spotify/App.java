@@ -2,7 +2,7 @@
  * Seraina Burge
  * Spotify Like App
  * October 2022
- * v1.0
+ * v2.0
  * TO DO: use array list to save song names with favorite values that need to be changed inside json 
  */
 package com.spotify;
