@@ -28,7 +28,8 @@ public class App {
   private static HashMap <String, HashMap<String, Object>> musicLibrary = new HashMap<String, HashMap<String, Object>>();
   //stores the play history
   private static ArrayList <String> playHistory = new ArrayList<String>();
-  
+  //stores songs as keys and favorite as value for changed favorite values
+  private static HashMap <String, Boolean> favoriteSong = new HashMap<String, Boolean>();
 
   // "main" makes this class a java app that can be executed
   public static void main(final String[] args) {
@@ -68,9 +69,9 @@ public class App {
 
     System.out.println("S[t]op playing");
 
-    System.out.println("(R)ewind 10 seconds");
+    System.out.println("[R]ewind 10 seconds");
 
-    System.out.println("(F)orward by 10 seconds")
+    System.out.println("[F]orward 10 seconds");
 
     System.out.println("[Q]uit");
 
@@ -98,7 +99,7 @@ public class App {
         System.out.println("-->Library<--");
         libraryDisplay();
         break;
-      case "t":
+      /*case "t":
         System.out.println("-->Stop<--");
         stop();
       case "r":
@@ -106,7 +107,7 @@ public class App {
         rewind();
       case "f":
         System.out.println("-->Forward<--");
-        forward();
+        forward();*/
       case "q":
         System.out.println("-->Quit<--");
         break;
@@ -137,7 +138,7 @@ public class App {
       System.out.print("["+(i+1)+"] " + key);
 
       //print artist, year, genre
-      for(Object value : songCredits.values()){
+      for(Object value : songCredits.values()){        
         System.out.print(", " + value);
       }
 
@@ -245,7 +246,85 @@ public class App {
     } catch (Exception e) {
       e.printStackTrace();
     }
+    //once a song starts playing a submenu to navigate the song and favorite it is displayed
+    displaySubMenu();
+    String userInput = "a";
+    while(userInput != "e")
+    {
+      //get user input
+      userInput = input.nextLine();
+      //set it to lower case
+      userInput.toLowerCase();
+      //let function handle
+      handleSubMenu(userInput, songName);
+
+    }
   }
+
+  public static void displaySubMenu(){
+    System.out.println("[P]ause the song");
+
+    System.out.println("[H]eart the song");
+
+    System.out.println("S[t]op playing");
+
+    System.out.println("[R]ewind 10 seconds");
+
+    System.out.println("[F]orward 10 seconds");
+
+    System.out.println("[E]xit the submenu");
+  }
+
+  public static void handleSubMenu(String userInput, String songName){
+    switch (userInput) { 
+      case "H":
+      System.out.println("-->Heart<--");
+      favorite(songName);
+      case "t":
+        System.out.println("-->Stop<--");
+        stop();
+      case "r":
+        System.out.println("-->Rewind<--");
+        rewind();
+      case "f":
+        System.out.println("-->Forward<--");
+        forward();
+      case "e":
+        System.out.println("-->Exit<--");
+        break;
+      default:
+        break;
+    }
+  }
+
+
+  public static void favorite(String songName){
+    //if the ley is already in the hashmap, it has been changed in the current session at least once
+    if(favoriteSong.containsKey(songName))
+    {
+      //switch the value for favorite from true to false and vice versa
+      if(favoriteSong.get("favorite")){
+        favoriteSong.remove("favorite");              //remove old favorite key/value pair
+        favoriteSong.put("favorite", false);   //replace with new one
+      }
+      else {
+        favoriteSong.remove("favorite");             //remove old favorite key/value pair
+        favoriteSong.put("favorite", true);  //replace with new one
+      }
+    } 
+    //if the value has not been modified yet in this session
+    else{
+      HashMap<String,Object> songInfo = new HashMap<String, Object>();
+      songInfo = musicLibrary.get(songName);
+      //switch the value for favorite from true to false and vice versa
+      if(songInfo.get("favorite") == "true")
+        favoriteSong.put("favorite", false);
+      else
+        favoriteSong.put("favorite", true);
+    }
+  }
+
+
 
   /*
    * Func: Stop currently played song
@@ -253,34 +332,38 @@ public class App {
    */
   public static void stop(){
     if(audioClip != null){
-      audioClip.stop();
+      audioClip.close();
     }
   }
 
-  /*
-   * Func: Rewind currently played song by 10 seconds
-   */
-  public static void rewind(){
-    if(audioClip != null){
-      audioClip.stop();
-      long position = audioClip.getMicrosecondPosition();
-      audioClip.setMicrosecondPosition(position-10000000);
-      audioClip.start();
-      }
-    }
-  
-  /*
+   /*
    * Func: Forward currently played song by 10 seconds
    */
   public static void forward(){
     if(audioClip != null){
       audioClip.stop();
       long position = audioClip.getMicrosecondPosition();
-      audioClip.setMicrosecondPosition(position+10000000);
+      //get position to forward 10 sec
+      position += 10000000;
+      audioClip.setMicrosecondPosition(position);
       audioClip.start();
-      }
+    }
   }
   
+  /*
+   * Func: Rewind currently played song by 10 seconds
+   * WHY does it now work?
+   */
+  public static void rewind(){
+    if(audioClip != null){
+      audioClip.stop();
+      long Position = audioClip.getMicrosecondPosition();
+      //get position to rewind 10 sec
+      Position -= 10000000;
+      audioClip.setMicrosecondPosition(Position);
+      audioClip.start();
+    }
+  }
 
   /* 
   *Func: Displays the recently played song
@@ -337,6 +420,7 @@ public class App {
 
     // loop over list
     String name, artist, year, genre, filepath;
+    boolean favorite;
     JSONObject obj;
 
     for (Integer i = 0; i < jsonData.size(); i++) {
@@ -347,6 +431,7 @@ public class App {
       year = (String) obj.get("year");
       genre = (String) obj.get("genre");
       filepath = (String) obj.get("filepath");
+      favorite = (Boolean) obj.get("favorite");
 
       // Hashmap that stores artist, year and genre
       HashMap <String, Object> songInfo = new HashMap <String, Object>();
@@ -354,9 +439,18 @@ public class App {
       songInfo.put("year", year);
       songInfo.put("genre", genre);
       songInfo.put("filepath", filepath);
-      songInfo.put("favorite", false);
+      songInfo.put("favorite", favorite);
 
       musicLibrary.put(name, songInfo);
+      favoriteSong.put(name, favorite);
+    }
+
+    public static void writeAudioLibrary(){
+      String pathToFile =
+      "/Users/serainaburge/Documents/GitHub/SpotifyApp/spotify/src/main/java/com/spotify/spotifyLibrary.json";
+      //open file
+      FileWriter file = new FileWriter(pathToFile);
+
     }
   }  
 }
