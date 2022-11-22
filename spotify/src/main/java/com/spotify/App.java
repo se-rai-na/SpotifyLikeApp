@@ -3,6 +3,7 @@
  * Spotify Like App
  * October 2022
  * v1.0
+ * TO DO: use array list to save song names with favorite values that need to be changed inside json 
  */
 package com.spotify;
 
@@ -30,6 +31,8 @@ public class App {
   private static ArrayList <String> playHistory = new ArrayList<String>();
   //stores songs as keys and favorite as value for changed favorite values
   private static HashMap <String, Boolean> favoriteSong = new HashMap<String, Boolean>();
+  //array that saves song names for favorite values that have been changed 
+  private static HashMap <String, Boolean> favoriteChanges = new HashMap<String, Boolean>();
 
   // "main" makes this class a java app that can be executed
   public static void main(final String[] args) {
@@ -130,6 +133,10 @@ public class App {
     Integer i = 0;
 
     for(String key : musicLibrary.keySet()){
+      //a heart is printed if the song is a favorite
+      if (favoriteSong.containsKey(key))
+        System.out.print("<3 ");
+
       //create hashmap to read the song title information
       HashMap <String, Object> songCredits = new HashMap <String, Object>();
       //read current keys object into the variable songCredits
@@ -248,8 +255,8 @@ public class App {
     }
     //once a song starts playing a submenu to navigate the song and favorite it is displayed
     displaySubMenu();
-    String userInput = "a";
-    while(userInput != "e")
+    String userInput = "";
+    while(!userInput.equals("e"))
     {
       //get user input
       userInput = input.nextLine();
@@ -257,7 +264,6 @@ public class App {
       userInput.toLowerCase();
       //let function handle
       handleSubMenu(userInput, songName);
-
     }
   }
 
@@ -277,18 +283,22 @@ public class App {
 
   public static void handleSubMenu(String userInput, String songName){
     switch (userInput) { 
-      case "H":
-      System.out.println("-->Heart<--");
-      favorite(songName);
+      case "h":
+        System.out.println("-->Heart<--");
+        favoriteDisplay(songName);
+        break;
       case "t":
         System.out.println("-->Stop<--");
         stop();
+        break;
       case "r":
         System.out.println("-->Rewind<--");
         rewind();
+        break;
       case "f":
         System.out.println("-->Forward<--");
         forward();
+        break;
       case "e":
         System.out.println("-->Exit<--");
         break;
@@ -297,30 +307,48 @@ public class App {
     }
   }
 
+  public static void favoriteDisplay(String songName){
+    System.out.println("Your favorite songs:");
+    //get user input on wether the currently played song should be hearted or not
+    String userInput = "";
+    //Display all the favorite songs
+    for(String key : favoriteSong.keySet()){
+      System.out.println(key);
+    }
+    if(favoriteSong.containsKey(songName))
+      System.out.printf("Do you want to unfavorite '%s'? [y]es [n]o   ", songName);  
+    else
+      System.out.printf("Do you want to favorite '%s' [y]es [n]o    ", songName);
+    //repeat until valid user input is entered
+    while(!userInput.equals("y")|| !userInput.equals("n")){
+      //get user input y or n
+      userInput = input.nextLine(); 
+      userInput.toLowerCase();
+      //user input is yes
+      if(userInput.equals("y"))
+        favorite(songName);
+      else
+        break;
+    }
+  }
+
 
   public static void favorite(String songName){
-    //if the ley is already in the hashmap, it has been changed in the current session at least once
+    //if the key is already in the hashmap, it has to be changed to unfavorite; the key/value
+    //pair is removed and added to the hashmap favoriteChanged for later reference
     if(favoriteSong.containsKey(songName))
     {
-      //switch the value for favorite from true to false and vice versa
-      if(favoriteSong.get("favorite")){
-        favoriteSong.remove("favorite");              //remove old favorite key/value pair
-        favoriteSong.put("favorite", false);   //replace with new one
-      }
-      else {
-        favoriteSong.remove("favorite");             //remove old favorite key/value pair
-        favoriteSong.put("favorite", true);  //replace with new one
-      }
+      //remove from hashmap favoriteSongs
+      favoriteSong.remove(songName); 
+      //add song to favoriteChanges for later reference             
+      favoriteChanges.put(songName, false); 
     } 
-    //if the value has not been modified yet in this session
+    //if the value is not in favoriteSong, the song is not a favorite yet
     else{
-      HashMap<String,Object> songInfo = new HashMap<String, Object>();
-      songInfo = musicLibrary.get(songName);
-      //switch the value for favorite from true to false and vice versa
-      if(songInfo.get("favorite") == "true")
-        favoriteSong.put("favorite", false);
-      else
-        favoriteSong.put("favorite", true);
+      //add song to favoriteSong hashmap 
+      favoriteSong.put(songName, true);
+      //add song to favoriteChanges for later reference
+      favoriteChanges.put(songName, true);
     }
   }
 
@@ -346,8 +374,8 @@ public class App {
       //get position to forward 10 sec
       position += 10000000;
       audioClip.setMicrosecondPosition(position);
-      audioClip.start();
-    }
+      audioClip.loop(Clip.LOOP_CONTINUOUSLY);
+    } 
   }
   
   /*
@@ -361,7 +389,7 @@ public class App {
       //get position to rewind 10 sec
       Position -= 10000000;
       audioClip.setMicrosecondPosition(Position);
-      audioClip.start();
+      audioClip.loop(Clip.LOOP_CONTINUOUSLY);
     }
   }
 
@@ -388,13 +416,13 @@ public class App {
     // JSON parser object to parse read file
     JSONParser jsonParser = new JSONParser();
 
-    JSONArray dataArray = null;
+    JSONArray jsonData = null;
 
     try (FileReader reader = new FileReader(fileName)) {
       // Read JSON file
       Object obj = jsonParser.parse(reader);
 
-      dataArray = (JSONArray) obj;
+      jsonData = (JSONArray) obj;
       // System.out.println(dataArray);
 
     } catch (FileNotFoundException e) {
@@ -405,7 +433,7 @@ public class App {
       e.printStackTrace();
     }
 
-    return dataArray;
+    return jsonData;
   }
 
   /*
@@ -419,8 +447,8 @@ public class App {
     JSONArray jsonData = readJSONArrayFile(pathToFile);
 
     // loop over list
-    String name, artist, year, genre, filepath;
-    boolean favorite;
+    String name, artist, year, genre, filepath, favorite; 
+    //Boolean favorite;
     JSONObject obj;
 
     for (Integer i = 0; i < jsonData.size(); i++) {
@@ -431,7 +459,13 @@ public class App {
       year = (String) obj.get("year");
       genre = (String) obj.get("genre");
       filepath = (String) obj.get("filepath");
-      favorite = (Boolean) obj.get("favorite");
+      //favorite = (Boolean) obj.get("favorite");
+      favorite = (String) obj.get("favorite");
+
+      //only add favorite songs to hashmap favoriteSong
+      if(favorite.equals("true")){
+        favoriteSong.put(name, true);
+      }
 
       // Hashmap that stores artist, year and genre
       HashMap <String, Object> songInfo = new HashMap <String, Object>();
@@ -439,18 +473,30 @@ public class App {
       songInfo.put("year", year);
       songInfo.put("genre", genre);
       songInfo.put("filepath", filepath);
-      songInfo.put("favorite", favorite);
+      //songInfo.put("favorite", favorite2);
 
       musicLibrary.put(name, songInfo);
-      favoriteSong.put(name, favorite);
     }
-
-    public static void writeAudioLibrary(){
+  }
+    /*public static void writeAudioLibrary()throws IOException{
       String pathToFile =
       "/Users/serainaburge/Documents/GitHub/SpotifyApp/spotify/src/main/java/com/spotify/spotifyLibrary.json";
       //open file
       FileWriter file = new FileWriter(pathToFile);
+      HashMap <String, Object> songInfo = new HashMap<String, Object>();
+      //use the favoriteSong HashMap to only change those values inside the JSON file
+      for(String key : favoriteSong.keySet()){
+        songInfo = musicLibrary.get(key);
+        //replace value for favorite with the updated one 
+        String favorite = songInfo.get("favorite").toString();
+        //replace value for the key inside the hashmap
+        musicLibrary.replace("favorite", songInfo);
 
-    }
-  }  
+        //turn the key/value pair that has to be updated inside the json file into a json object 
+        
+
+      }
+      file.close();
+
+    }  */
 }
