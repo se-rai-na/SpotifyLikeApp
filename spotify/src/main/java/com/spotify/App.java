@@ -24,6 +24,7 @@ public class App {
 
   // prviate variables for the app
   private static Clip audioClip;
+  //base path to the json file
   private static String basePath =
   "/Users/serainaburge/Documents/GitHub/SpotifyApp/wav";
   private static Scanner input = new Scanner(System.in);
@@ -33,9 +34,9 @@ public class App {
   private static ArrayList <String> playHistory = new ArrayList<String>();
   //stores songs as keys and favorite as value for changed favorite values
   private static HashMap <String, Boolean> favoriteSong = new HashMap<String, Boolean>();
-  //array that saves song names for favorite values that have been changed 
+  //hashmap that saves song names for favorite values that have been changed 
   private static HashMap <String, Boolean> favoriteChanges = new HashMap<String, Boolean>();
-  //json arrat that stores json data and is used at the end to update the file
+  //json array that stores json data and is used at the end to update the file
   private static JSONArray jsonData;
 
   // "main" makes this class a java app that can be executed
@@ -57,7 +58,7 @@ public class App {
       handleMenu(userInput);
     }
 
-    // close the scanner
+    // close the scanner after user input q
     input.close();
   }
 
@@ -107,6 +108,7 @@ public class App {
         stop();
       case "q":
         System.out.println("-->Quit<--");
+        //function used to update JSON file
         writeAudioLibrary();
         break;
       default:
@@ -262,9 +264,10 @@ public class App {
     }
   }
 
+  /*
+   * Func: Displays the options for the sub menu which handles the audio playback and "hearting" songs
+   */
   public static void displaySubMenu(){
-    System.out.println("[P]ause the song");
-
     System.out.println("[H]eart the song");
 
     System.out.println("S[t]op playing");
@@ -318,13 +321,21 @@ public class App {
     System.out.println("Your favorite songs:");
     //get user input on wether the currently played song should be hearted or not
     String userInput = "";
+    //initialize hashmap used to read song information
+    HashMap <String, Object> songInfo = new HashMap <String, Object>();        
     //Display all the favorite songs
     for(String key : favoriteSong.keySet()){
-      System.out.println(key);
+      //add song information in hashmap
+      songInfo = musicLibrary.get(key);
+      //display the song information for each favorite song
+      System.out.printf("%s by %s (%s) \n", key, songInfo.get("artist"), songInfo.get("year"));
     }
+    //check if the currently played song is part of the favorites or not and ask accordingly
     if(favoriteSong.containsKey(songName))
+      //song is already a favorite
       System.out.printf("Do you want to unfavorite '%s'? [y]es, any other key for no   ", songName);  
     else
+      //song is not a favorite yet
       System.out.printf("Do you want to favorite '%s' [y]es, any other key for no    ", songName);
     
     //get user input
@@ -334,16 +345,25 @@ public class App {
     
     //switch statement to handle user input
     switch(userInput){
+      //if song should be favorited/unfavorited
       case "y":
+        //pass songname to the favorite function to change its value
         favorite(songName);
+        //display submenu again
         displaySubMenu();
         break;
       default:
+        //if user does not want to change favorite value
+        //simply display the submenu again
         displaySubMenu();
         break;
     }   
   }
-
+  /*
+   * Func: Used to favorite/ unfavorite a song; 
+   *       changes are saved in the hashmap favoriteChanges for reference when adjusting the JSON file
+   *       favorited song are stored in favoriteSong
+   */
 
   public static void favorite(String songName){
     //if the key is already in the hashmap, it has to be changed to unfavorite; the key/value
@@ -366,8 +386,8 @@ public class App {
     else{
       //add song to favoriteSong hashmap 
       favoriteSong.put(songName, true);
-      
-      //check if song has been changed in the current session
+      //check if song has already been changed in the current session
+      //if so: replace the entry with the new value
       if(favoriteChanges.containsKey(songName))
         //change the key/value pair to true
         favoriteChanges.replace(songName, false, true);
@@ -377,6 +397,7 @@ public class App {
   }
   /*
    * Func: Pause currently played song
+   * Desc: Stop the audio stream
    */
   public static void pause(){
     if(audioClip != null){
@@ -386,6 +407,7 @@ public class App {
 
   /*
    * Func: continue playing currently paused song
+   * Desc: Start the audio stream where it was stopped before
    */
   public static void play(){
     if(audioClip != null){
@@ -395,7 +417,7 @@ public class App {
 
   /*
    * Func: Stop currently played song
-   * 
+   * Desc: Close the audio stream
    */
   public static void stop(){
     if(audioClip != null){
@@ -404,29 +426,34 @@ public class App {
   }
 
    /*
-   * Func: Forward currently played song by 10 seconds
+   * Func: Forward currently played song by 5 seconds
+   * Desc: Forward the audiostream by changing the microsecond position
    */
   public static void forward(){
     if(audioClip != null){
       audioClip.stop();
       long position = audioClip.getMicrosecondPosition();
-      //get position to forward 10 sec
-      position += 10000000;
+      //get position to forward 5 sec
+      position += 5000000;
+      //set microsecond position to 5 seconds after the audio stream was stopped
       audioClip.setMicrosecondPosition(position);
       audioClip.loop(Clip.LOOP_CONTINUOUSLY);
     } 
   }
   
   /*
-   * Func: Rewind currently played song by 10 seconds
-   * WHY does it now work?
+   * Func: Rewind currently played song by 5 seconds
+   * Desc: Rewind the audio stream by changing the microseconds position
    */
   public static void rewind(){
     if(audioClip != null){
+      //pause the audio stream
       audioClip.stop();
+      //get current position in audio stream
       long Position = audioClip.getMicrosecondPosition();
-      //get position to rewind 10 sec
-      Position -= 10000000;
+      //get position to rewind 5 sec
+      Position -= 5000000;
+      //set microsecond position to 5 seconds before audio stream was stopped
       audioClip.setMicrosecondPosition(Position);
       audioClip.loop(Clip.LOOP_CONTINUOUSLY);
     }
@@ -439,6 +466,7 @@ public class App {
   */
   public static void home(){
     System.out.println("Your recently played songs:");
+    //display the play history
     for(int i = 0; i < playHistory.size(); i++){
       //display a number starting with 1 with the song tiile and artist
       System.out.println((i+1) + " " + playHistory.get(i));
@@ -492,14 +520,13 @@ public class App {
     JSONObject obj;
 
     for (Integer i = 0; i < jsonData.size(); i++) {
-      // parse the object and pull out the name and birthday
+      // parse the object and pull out the name, artist, year, genre, filepath and favorite status
       obj = (JSONObject) jsonData.get(i);
       name = (String) obj.get("name");
       artist = (String) obj.get("artist");
       year = (String) obj.get("year");
       genre = (String) obj.get("genre");
       filepath = (String) obj.get("filepath");
-      //favorite = (Boolean) obj.get("favorite");
       favorite = (Boolean) obj.get("favorite");
 
       //only add favorite songs to hashmap favoriteSong
@@ -507,58 +534,63 @@ public class App {
         favoriteSong.put(name, true);
 
       // Hashmap that stores artist, year and genre
+      //favorite is not added, since it is already inside the favoriteSong hashmap
       HashMap <String, Object> songInfo = new HashMap <String, Object>();
       songInfo.put("artist", artist);
       songInfo.put("year", year);
       songInfo.put("genre", genre);
       songInfo.put("filepath", filepath);
-      //songInfo.put("favorite", favorite2);
-
+      //use song as key and songInfo hashmap as values
       musicLibrary.put(name, songInfo);
     }
   }
-    public static void writeAudioLibrary(){
-      //update the jsonarray jsonData
-      JSONObject obj;
-      String name;
-      for(Integer i = 0; i < jsonData.size(); i++){
-        obj = (JSONObject) jsonData.get(i);
-        name = (String) obj.get("name");
-        //check if favorite of that song was changed during the program
-        if(favoriteChanges.containsKey(name)){
-          //if the value is true
-          if(favoriteChanges.get(name)){
-            obj.remove("favorite");
-            obj.put("favorite", true);
-          }
-          //if the value is false
-          else{
-            obj.remove("favorite");
-            obj.put("favorite", false);
-          }
-          System.out.println(obj);
-          System.out.println(jsonData.get(i));
-          //jsonData.remove(i);
-          //jsonData.put(null);
+  /*
+   * Func: Overwrite JSON file with changes made during the session
+   * Desc: The JSONArray is checked and adjusted with the help of the 
+   * favoriteChanges hashmap and then used to overwrite the JSON file 
+   * which is used to read all the songInfo etc. at the start of the program
+   */
+  public static void writeAudioLibrary(){
+    //update the jsonarray jsonData
+    JSONObject obj;
+    String name;
+    for(Integer i = 0; i < jsonData.size(); i++){
+      //get JSONObject from the JSONArray
+      obj = (JSONObject) jsonData.get(i);
+      //get the song title from the JSONobject
+      name = (String) obj.get("name");
+      //check if song title exists in favoriteChanges hashmap
+      //if so: changes have been made during the session and need to be written onto json file
+      if(favoriteChanges.containsKey(name)){
+        //if the value for favorite is true
+        if(favoriteChanges.get(name)){
+          obj.remove("favorite");
+          obj.put("favorite", true);
         }
-      } 
-
-      //write changes onto the json file
-      FileWriter file;
-      String pathToFile =
-      "/Users/serainaburge/Documents/GitHub/SpotifyApp/spotify/src/main/java/com/spotify/spotifyLibrary.json";
-
-      try{
-        //open file
-        file = new FileWriter(pathToFile);
-        //write changes onto file after tunring JSONArray into a JSONString
-        file.write(jsonData.toJSONString());
-        //flush the stream
-        file.flush();
-        //close the file
-        file.close();
-      } catch (IOException e) {
-        e.printStackTrace();
+        //if the value for favorite is false
+        else{
+          obj.remove("favorite");
+          obj.put("favorite", false);
+        }
       }
-    }  
+    } 
+
+    //write changes onto the json file
+    FileWriter file;
+    String pathToFile =
+    "/Users/serainaburge/Documents/GitHub/SpotifyApp/spotify/src/main/java/com/spotify/spotifyLibrary.json";
+
+    try{
+      //open file
+      file = new FileWriter(pathToFile);
+      //write changes onto file after tunring JSONArray into a JSONString
+      file.write(jsonData.toJSONString());
+      //flush the stream
+      file.flush();
+      //close the file
+      file.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }  
 }
